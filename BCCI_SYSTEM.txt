@@ -1,0 +1,310 @@
+Imports MySql.Data.MySqlClient
+Public Class Form1
+
+    Dim connection As New MySqlConnection("datasource=localhost;port=3306;username=root;password=;database=bcci_system")
+
+
+
+    Private Sub Name_of_Employee_TextChanged(sender As Object, e As EventArgs) Handles Name_of_Employee.TextChanged
+
+    End Sub
+
+    Private Sub Name_of_Company_TextChanged(sender As Object, e As EventArgs) Handles Name_of_Company.TextChanged
+
+    End Sub
+
+    Private Sub Calculate_Button_Click(sender As Object, e As EventArgs) Handles Calculate_Button.Click
+
+        Dim OBJ As New Form2
+
+        If String.IsNullOrEmpty(Name_of_Employee.Text) Or String.IsNullOrEmpty(Name_of_Company.Text) Or String.IsNullOrEmpty(Monthly_Salary.Text) Then
+            MessageBox.Show("Please fill the empty field.")
+        Else
+
+            Tax()
+
+            SSS()
+
+            PagIbig()
+
+            PhilHealth_Box()
+
+        End If
+
+    End Sub
+
+    Private Sub Yes_Button_Click(sender As Object, e As EventArgs) Handles Yes_Button.Click
+
+        Name_of_Employee.Clear()
+
+        Name_of_Company.Clear()
+
+        Monthly_Salary.Clear()
+
+        Income_Tax.Clear()
+
+        SSS_Contribution.Clear()
+
+        Pag_Ibig.Clear()
+
+        PHILHEALTH_AREA.Clear()
+
+        Name_of_Employee.Focus()
+
+    End Sub
+
+    Private Sub No_Button_Click(sender As Object, e As EventArgs) Handles No_Button.Click
+
+        Close()
+
+    End Sub
+
+    Private Sub Monthly_Salary_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Monthly_Salary.KeyPress
+        If (Asc(e.KeyChar) >= 48 And Asc(e.KeyChar) <= 57) Or Asc(e.KeyChar) = 46 Or Asc(e.KeyChar) = 8 Then
+
+        Else
+            e.Handled = True
+            MessageBox.Show("You can only input numbers!")
+        End If
+
+        If Monthly_Salary.Text = "" Then
+            Income_Tax.Clear()
+            SSS_Contribution.Clear()
+            Pag_Ibig.Clear()
+            PHILHEALTH_AREA.Clear()
+        End If
+    End Sub
+
+    Private Sub Income_Tax_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Income_Tax.KeyPress
+
+    End Sub
+
+    Private Sub SSS_Contribution_KeyPress(sender As Object, e As KeyPressEventArgs) Handles SSS_Contribution.KeyPress
+
+    End Sub
+
+    Private Sub Pag_Ibig_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Pag_Ibig.KeyPress
+
+    End Sub
+
+    Private Sub PHILHEALTH_AREA_KeyPress(sender As Object, e As KeyPressEventArgs) Handles PHILHEALTH_AREA.KeyPress
+
+    End Sub
+
+    Function Tax()
+
+        Dim aSalary, mTax As Double
+        aSalary = Double.Parse(Monthly_Salary.Text)
+
+        aSalary = (aSalary * 12)
+
+
+        If aSalary < 250000 Then
+            mTax = 0
+
+        ElseIf (aSalary >= 250000 And aSalary <= 400000) Then
+
+            mTax = (0.2 * (aSalary - 250000)) / 12
+
+        ElseIf (aSalary >= 400000 And aSalary <= 800000) Then
+
+            mTax = (30000 + (0.25 * (aSalary - 400000))) / 12
+
+        ElseIf (aSalary >= 800000 And aSalary <= 2000000) Then
+
+            mTax = (130000 + (0.3 * (aSalary - 800000))) / 12
+
+        ElseIf (aSalary >= 2000000 And aSalary <= 8000000) Then
+
+            mTax = (490000 + (0.32 * (aSalary - 2000000)))
+
+        ElseIf (aSalary > 8000000) Then
+
+            mTax = (2410000 + (0.35 * (aSalary - 8000000)))
+
+        End If
+        Income_Tax.Text = mTax
+
+        Return mTax
+
+    End Function
+
+    Function SSS()
+        Dim ssl, mSalary As Double
+        mSalary = Double.Parse(Monthly_Salary.Text)
+
+        If mSalary < 2250 Then
+
+            ssl = 80
+
+        ElseIf (mSalary >= 2250 And mSalary <= 2749.99) Then
+
+            ssl = 100
+
+        ElseIf (mSalary >= 2750 And mSalary <= 3249.99) Then
+
+            ssl = 120
+
+        ElseIf (mSalary >= 3250 And mSalary <= 3749.99) Then
+
+            ssl = 140
+
+        ElseIf (mSalary >= 3750 And mSalary <= 4249.99) Then
+
+            ssl = 160
+
+        ElseIf (mSalary >= 4250 And mSalary <= 4749.99) Then
+
+            ssl = 180
+
+        ElseIf (mSalary >= 4750 And mSalary <= 5249.99) Then
+
+            ssl = 200
+
+        ElseIf (mSalary >= 5250 And mSalary <= 5749.99) Then
+
+            ssl = 220
+
+        ElseIf (mSalary >= 5750 And mSalary <= 6249.99) Then
+
+            ssl = 240
+
+        ElseIf (mSalary > 6250) Then
+
+            ssl = 260
+        End If
+        SSS_Contribution.Text = ssl
+
+        Return ssl
+
+    End Function
+
+
+    Function PagIbig()
+        Dim salar, pagaw As Double
+        salar = Double.Parse(Monthly_Salary.Text)
+
+        If salar <= 1500 Then
+            pagaw = salar * 0.01
+        Else
+            pagaw = salar * 0.02
+        End If
+        Pag_Ibig.Text = pagaw
+
+        Return pagaw
+
+    End Function
+
+    Function PhilHealth_Box()
+
+        Dim Philhealth As Double
+        Philhealth = Double.Parse(Monthly_Salary.Text)
+
+        If Philhealth < 8999.99 Then
+            Philhealth = 100
+        ElseIf Philhealth >= 9000.0 And Philhealth <= 9999.99 Then
+            Philhealth = 112.5
+        ElseIf Philhealth >= 10000.0 And Philhealth <= 10999.99 Then
+            Philhealth = 125.0
+        ElseIf Philhealth >= 11000.0 And Philhealth <= 11999.99 Then
+            Philhealth = 137.5
+        ElseIf Philhealth >= 12000.0 And Philhealth <= 12999.99 Then
+            Philhealth = 150.0
+        ElseIf Philhealth >= 13000.0 And Philhealth <= 13999.99 Then
+            Philhealth = 162.5
+        ElseIf Philhealth >= 14000.0 And Philhealth <= 14999.99 Then
+            Philhealth = 175.0
+        ElseIf Philhealth >= 15000.0 And Philhealth <= 15999.99 Then
+            Philhealth = 187.5
+        ElseIf Philhealth >= 16000.0 And Philhealth <= 16999.99 Then
+            Philhealth = 200.0
+        ElseIf Philhealth >= 17000.0 And Philhealth <= 17999.99 Then
+            Philhealth = 212.5
+        ElseIf (Philhealth >= 18000.0) And (Philhealth <= 18999.99) Then
+            Philhealth = 225.0
+        ElseIf (Philhealth >= 19000.0) And (Philhealth <= 19999.99) Then
+            Philhealth = 237.5
+        ElseIf (Philhealth >= 20000.0) And (Philhealth <= 20999.99) Then
+            Philhealth = 250.0
+        ElseIf (Philhealth >= 21000.0) And (Philhealth <= 21999.99) Then
+            Philhealth = 262.5
+        ElseIf (Philhealth >= 22000.0) And (Philhealth <= 22999.99) Then
+            Philhealth = 275.0
+        ElseIf (Philhealth >= 23000.0) And (Philhealth <= 23999.99) Then
+            Philhealth = 287.5
+        ElseIf (Philhealth >= 24000.0) And (Philhealth <= 24999.99) Then
+            Philhealth = 300.0
+        ElseIf (Philhealth >= 25000.0) And (Philhealth <= 25999.99) Then
+            Philhealth = 312.5
+        ElseIf (Philhealth >= 26000.0) And (Philhealth <= 26999.99) Then
+            Philhealth = 325.0
+        ElseIf (Philhealth >= 27000.0) And (Philhealth <= 27999.99) Then
+            Philhealth = 337.5
+        ElseIf (Philhealth >= 28000.0) And (Philhealth <= 28999.99) Then
+            Philhealth = 350.0
+        ElseIf (Philhealth >= 29000.0) And (Philhealth <= 29999.99) Then
+            Philhealth = 362.5
+        ElseIf (Philhealth >= 30000.0) And (Philhealth <= 30999.99) Then
+            Philhealth = 375.0
+        ElseIf (Philhealth >= 31000.0) And (Philhealth <= 31999.99) Then
+            Philhealth = 387.5
+        ElseIf (Philhealth >= 32000.0) And (Philhealth <= 32999.99) Then
+            Philhealth = 400.0
+        ElseIf (Philhealth >= 33000.0) And (Philhealth <= 33999.99) Then
+            Philhealth = 412.5
+        ElseIf (Philhealth >= 34000.0) And (Philhealth <= 34999.99) Then
+            Philhealth = 425.0
+        ElseIf Philhealth > 35000 Then
+            Philhealth = 437.5
+        End If
+
+        PHILHEALTH_AREA.Text = Philhealth
+
+        Return Philhealth
+
+    End Function
+
+    Private Sub Show_Database_Click(sender As Object, e As EventArgs) Handles Show_Database.Click
+        Form2.Show()
+    End Sub
+
+    Private Sub Add_to_Database_Click(sender As Object, e As EventArgs) Handles Add_to_Database.Click
+        'Form2.DataGridView1.Rows.Add(Name_of_Employee.Text, Name_of_Company.Text, Monthly_Salary.Text, Income_Tax.Text, SSS_Contribution.Text, Pag_Ibig.Text, PHILHEALTH_AREA.Text)
+
+        If String.IsNullOrEmpty(Name_of_Employee.Text) Or String.IsNullOrEmpty(Name_of_Company.Text) Or String.IsNullOrEmpty(Monthly_Salary.Text) Then
+            MessageBox.Show("Please fill the empty field.")
+        Else
+
+            Try
+                Dim command As New MySqlCommand("INSERT INTO `employee`(`Name_of_Employee`, `Name_of_Company`, `Monthly_Salary`, `Income_Tax`, `SSS_Contribution`, `Pag_Ibig`, `Philhealth`) VALUES (@noe,@noc,@ms,@it,@sss,@pi,@ph)", connection)
+                command.Parameters.Add("@noe", MySqlDbType.VarChar).Value = Name_of_Employee.Text
+                command.Parameters.Add("@noc", MySqlDbType.VarChar).Value = Name_of_Company.Text
+                command.Parameters.Add("@ms", MySqlDbType.VarChar).Value = Monthly_Salary.Text
+                command.Parameters.Add("@it", MySqlDbType.VarChar).Value = Income_Tax.Text
+                command.Parameters.Add("@sss", MySqlDbType.VarChar).Value = SSS_Contribution.Text
+                command.Parameters.Add("@pi", MySqlDbType.VarChar).Value = Pag_Ibig.Text
+                command.Parameters.Add("@ph", MySqlDbType.VarChar).Value = PHILHEALTH_AREA.Text
+
+                connection.Open()
+                If command.ExecuteNonQuery() = 1 Then
+                    MessageBox.Show("Data Inserted")
+                Else
+                    MessageBox.Show("Error")
+                End If
+
+                connection.Close()
+
+            Catch ex As Exception
+                connection.Close()
+                MessageBox.Show("Duplicated")
+
+            End Try
+
+
+        End If
+
+
+    End Sub
+End Class
+
+
